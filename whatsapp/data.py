@@ -10,7 +10,7 @@ from whatsapp.utils import (
     ask_for_delivery_options, handle_delivery_selection, handle_location_received,
     send_order_confirmation_with_delivery
 )
-from whatsapp.doctype.chat_session.chat_session import get_or_create_session
+from whatsapp.whatsapp.doctype.chat_session.chat_session import get_or_create_session
 
 
 @frappe.whitelist(allow_guest=True)

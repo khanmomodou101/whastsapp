@@ -23,7 +23,7 @@ def send_message(phone):
         text='Hi! This message sent from pywa!'
     )
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def request_location(phone):
     wa.request_location(
         to=phone,
