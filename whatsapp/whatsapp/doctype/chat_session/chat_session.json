@@ -1,0 +1,90 @@
+{
+    "actions": [],
+    "allow_rename": 1,
+    "creation": "2024-01-01 00:00:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+     "wa_id",
+     "profile_name",
+     "current_step",
+     "last_message",
+     "last_bot_message",
+     "session_data",
+     "status",
+     "last_updated"
+    ],
+    "fields": [
+     {
+      "fieldname": "wa_id",
+      "fieldtype": "Data",
+      "label": "WhatsApp ID",
+      "reqd": 1,
+      "unique": 1
+     },
+     {
+      "fieldname": "profile_name",
+      "fieldtype": "Data",
+      "label": "Profile Name"
+     },
+     {
+      "fieldname": "current_step",
+      "fieldtype": "Select",
+      "label": "Current Step",
+      "options": "Greeting\nLocation_Request\nConfirm_Location\nService_Selection\nDelivery_Options\nOrder_Confirmation\nDone",
+      "default": "Greeting"
+     },
+     {
+      "fieldname": "last_message",
+      "fieldtype": "Small Text",
+      "label": "Last Message"
+     },
+     {
+      "fieldname": "last_bot_message",
+      "fieldtype": "Small Text",
+      "label": "Last Bot Message"
+     },
+     {
+      "fieldname": "session_data",
+      "fieldtype": "JSON",
+      "label": "Session Data"
+     },
+     {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "Active\nClosed",
+      "default": "Active"
+     },
+     {
+      "fieldname": "last_updated",
+      "fieldtype": "Datetime",
+      "label": "Last Updated",
+      "read_only": 1
+     }
+    ],
+    "index_web_pages_for_search": 1,
+    "links": [],
+    "modified": "2024-01-01 00:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "WhatsApp",
+    "name": "Chat Session",
+    "owner": "Administrator",
+    "permissions": [
+     {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+     }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "track_changes": 1,
+    "track_views": 1
+   } 

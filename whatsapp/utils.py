@@ -1,7 +1,7 @@
-from pywa import WhatsApp, types
+from pywa import WhatsApp
 import frappe
 
-from pywa.types import Button, SectionList, Section, SectionRow
+from pywa.types import Button, SectionList, Section, SectionRow, ButtonUrl
 import uuid
 
 
@@ -144,16 +144,30 @@ def send_order_option(phone):
     )
 
 @frappe.whitelist()
-def send_catalog(phone = phone):
+def send_catalog(phone):
     """
     This function sends a message to the user with a list of products.
     """
-
-    ca.send_catalog(
-            to=phone,
-            body='Check out our catalog!',
-            sender="281222978402210"
-        )
+    try:
+        ca.send_catalog(
+                to=phone,
+                body='Check out our catalog!',
+                sender="281222978402210"
+            )
+        # After sending catalog, ask for delivery options
+        ask_for_delivery_options(phone)
+        return "Catalog sent successfully"
+    except Exception as e:
+        # If catalog is empty or not available, send a fallback message
+        if "Products not found in FB catalog" in str(e):
+            ca.send_message(
+                to=phone,
+                text='Sorry, our catalog is currently empty. Please contact us directly to place your order.'
+            )
+            return "Catalog is empty, sent fallback message"
+        else:
+            # Re-raise other exceptions
+            raise e
         
 @frappe.whitelist()
 def update_commerce_settings():
@@ -204,10 +218,8 @@ def indicate_typing(message_id):
 
 @frappe.whitelist()
 def send_order_confirmation(phone = phone):
-    url_button = types.UrlButton(
-        title='Pay Now',
-        url='https://www.jokoor.com'
-    )
+    item_data = ""
+   
     items = [
         {
             "name": "item1",
@@ -225,31 +237,130 @@ def send_order_confirmation(phone = phone):
     delivery_fee = 100
     for item in items:
         subtotal += item["price"] * item["quantity"]
+        item_data += f"{item['name']} -------------------- {item['quantity']} x {item['price']}\n"
     total_amount = subtotal + delivery_fee
     """
     This function sends a message to the user with a list of items.
     """
-    message = f"""  
+    message = f"""Thank you for your order! 🛍️
 
-    Thank you for your order! 🛍️  
-    Here are the details:  
+Here are the details:
 
-    {items}
+{item_data}
+--------------------
+Subtotal: D{subtotal}
+Delivery Fee: D{delivery_fee}
+--------------------
+Total Amount: D{total_amount}
 
-    -----------------------  
-    Subtotal: {subtotal}  
-    Delivery Fee: {delivery_fee}  
-    -----------------------  
-    Total Amount: {total_amount}   
-
-    We’ll notify you once your order is on the way 🚚  
-    Thank you for shopping with us
-            """
+We'll notify you once your order is on the way 🚚
+Thank you for shopping with us"""
+    
     response = wa.send_message(
         to=phone,
         text=message,
-        buttons=[
-            url_button
-        ]
+        buttons=ButtonUrl(
+            title='Pay Now',
+            url='https://www.jokoor.com'
+        )
     )
     return "Sent"
+
+@frappe.whitelist()
+def send_order_confirmation_with_delivery(phone, delivery_fee=100):
+    """
+    Send order confirmation with delivery fee included
+    """
+    item_data = ""
+   
+    items = [
+        {
+            "name": "item1",
+            "quantity": 1,
+            "price": 100
+        },
+        {
+            "name": "item2",
+            "quantity": 1,
+            "price": 100
+        }
+    ]
+    subtotal = 0
+    total_amount = 0
+    
+    for item in items:
+        subtotal += item["price"] * item["quantity"]
+        item_data += f"{item['name']} -------------------- {item['quantity']} x {item['price']}\n"
+    
+    total_amount = subtotal + delivery_fee
+    
+    message = f"""Thank you for your order! 🛍️
+
+Here are the details:
+
+{item_data}
+--------------------
+Subtotal: D{subtotal}
+Delivery Fee: D{delivery_fee}
+--------------------
+Total Amount: D{total_amount}
+
+We'll notify you once your order is on the way 🚚
+Thank you for shopping with us"""
+    
+    response = wa.send_message(
+        to=phone,
+        text=message,
+        buttons=ButtonUrl(
+            title='Pay Now',
+            url='https://www.jokoor.com'
+        )
+    )
+    return "Sent"
+
+@frappe.whitelist()
+def ask_for_delivery_options(phone):
+    """
+    Ask user how they want to receive their order
+    """
+    response = wa.send_message(
+        to=phone,
+        header='🛍 How would you like to receive your order?',
+        text='Please choose an option:',
+        buttons=[
+            Button(title='Pickup', callback_data='pickup'),
+            Button(title='Delivery', callback_data='delivery')
+        ]
+    )
+    return "Delivery options sent"
+
+@frappe.whitelist()
+def handle_delivery_selection(phone, delivery_type):
+    """
+    Handle user's delivery selection
+    """
+    if delivery_type == 'delivery':
+        # Request location for delivery
+        wa.request_location(
+            to=phone,
+            text='Please share your location for delivery.',
+        )
+        return "Location request sent"
+    elif delivery_type == 'pickup':
+        # Send order confirmation without delivery fee
+        return send_order_confirmation_with_delivery(phone, delivery_fee=0)
+    else:
+        # Send error message
+        wa.send_message(
+            to=phone,
+            text='Invalid selection. Please try again.'
+        )
+        return "Error message sent"
+
+@frappe.whitelist()
+def handle_location_received(phone, latitude, longitude):
+    """
+    Handle when user shares their location
+    """
+    # Send order confirmation with delivery fee
+    return send_order_confirmation_with_delivery(phone, delivery_fee=100)
