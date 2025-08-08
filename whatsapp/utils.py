@@ -1,4 +1,4 @@
-from pywa import WhatsApp
+from pywa import WhatsApp, types
 import frappe
 
 from pywa.types import Button, SectionList, Section, SectionRow
@@ -17,14 +17,14 @@ ca = WhatsApp(
     token='EAAlXQfMg4WYBPPS7vGSYmupl2iKZALccdWc89y3EmntgxdDZB6uSOSWd8dZBNAIqhW5pAp8UKUZBYEyd21s3ZC7zCKg3Ly4ivFZBKyHNtXFTsuQz7UZCey6mK4MWHfDnQaZAwkRpEEnlRxVQrORmB6jlqQ1PTY6FJqUGgTU6xb3OlO3bVB3BZCvMPEXZCx4gxZCCWhbCgZDZD'
 )
 @frappe.whitelist(allow_guest=True)
-def send_message(phone=phone):
+def send_message(phone):
     wa.send_message(
         to=phone,
         text='Hi! This message sent from pywa!'
     )
 
 @frappe.whitelist()
-def request_location(phone = phone):
+def request_location(phone):
     wa.request_location(
         to=phone,
         text='Please share your location with us.',
@@ -35,7 +35,7 @@ def request_location(phone = phone):
 
 
 @frappe.whitelist(allow_guest=True)
-def greet_user(phone = phone):
+def greet_user(phone):
     response = wa.send_message(
         to=phone,
         header='👋 Hello! Welcome to Jokoor Food Service.',
@@ -91,7 +91,7 @@ def greet_user(phone = phone):
     )
 
 @frappe.whitelist()
-def send_order_option(phone = phone):
+def send_order_option(phone):
     """
     This function sends a message to the user with a list of order options.
     either to order from a restaruant or search for a type a prodcut name
@@ -201,4 +201,55 @@ def send_delivery_options(phone = phone):
 def indicate_typing(message_id):
     wa.indicate_typing(message_id)
     
-    
+
+@frappe.whitelist()
+def send_order_confirmation(phone = phone):
+    url_button = types.UrlButton(
+        title='Pay Now',
+        url='https://www.jokoor.com'
+    )
+    items = [
+        {
+            "name": "item1",
+            "quantity": 1,
+            "price": 100
+        },
+        {
+            "name": "item2",
+            "quantity": 1,
+            "price": 100
+        }
+    ]
+    subtotal = 0
+    total_amount = 0
+    delivery_fee = 100
+    for item in items:
+        subtotal += item["price"] * item["quantity"]
+    total_amount = subtotal + delivery_fee
+    """
+    This function sends a message to the user with a list of items.
+    """
+    message = f"""  
+
+    Thank you for your order! 🛍️  
+    Here are the details:  
+
+    {items}
+
+    -----------------------  
+    Subtotal: {subtotal}  
+    Delivery Fee: {delivery_fee}  
+    -----------------------  
+    Total Amount: {total_amount}   
+
+    We’ll notify you once your order is on the way 🚚  
+    Thank you for shopping with us
+            """
+    response = wa.send_message(
+        to=phone,
+        text=message,
+        buttons=[
+            url_button
+        ]
+    )
+    return "Sent"
