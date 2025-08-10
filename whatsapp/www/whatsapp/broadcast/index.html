@@ -1,0 +1,157 @@
+{% extends "sports/templates/pages/base.html" %}
+
+{% block content %}
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5; color: #333; }
+    .dashboard-container { display: flex; min-height: 100vh; }
+    .sidebar { width: 280px; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1); position: fixed; height: 100vh; overflow-y: auto; z-index: 1000; }
+    .sidebar-header { padding: 30px 25px 20px; border-bottom: 1px solid #e0e0e0; }
+    .logo { display: flex; align-items: center; margin-bottom: 20px; }
+    .logo-icon { width: 24px; height: 24px; background: linear-gradient(135deg, #ff6b35, #f7931e); border-radius: 50%; margin-right: 12px; position: relative; }
+    .logo-icon::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; background: white; border-radius: 50%; }
+    .logo-text { font-size: 20px; font-weight: 600; color: #2c3e50; }
+    .club-info { text-align: center; padding: 15px 0; }
+    .club-name { font-size: 18px; font-weight: 700; color: #2c3e50; margin-bottom: 5px; }
+    .club-league { font-size: 14px; color: #666; background: #f8f9fa; padding: 4px 12px; border-radius: 20px; display: inline-block; }
+    .nav-menu { padding: 20px 0; }
+    .nav-item { display: flex; align-items: center; padding: 15px 25px; color: #666; text-decoration: none; transition: all 0.3s ease; border-left: 3px solid transparent; }
+    .nav-item:hover { background: #f8f9fa; color: #2c3e50; border-left-color: #ff6b35; }
+    .nav-item.active { background: #fff5f2; color: #ff6b35; border-left-color: #ff6b35; font-weight: 600; }
+    .nav-icon { width: 20px; height: 20px; margin-right: 12px; opacity: 0.7; }
+    .nav-item.active .nav-icon { opacity: 1; }
+    .main-content { flex: 1; margin-left: 280px; padding: 30px; }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .page-title { font-size: 28px; font-weight: 700; color: #2c3e50; }
+    .header-actions { display: flex; gap: 15px; }
+    .btn { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-primary { background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; box-shadow: 0 4px 15px rgba(255,107,53,0.3); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,107,53,0.4); }
+    .btn-secondary { background: white; color: #2c3e50; border: 2px solid #e0e0e0; }
+    .btn-secondary:hover { border-color: #ff6b35; color: #ff6b35; }
+    .filters-section { background: white; border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .filters-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .filters-title { font-size: 18px; font-weight: 600; color: #2c3e50; }
+    .clear-filters { color: #ff6b35; text-decoration: none; font-size: 14px; font-weight: 500; cursor: pointer; }
+    .filters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+    .filter-group { display: flex; flex-direction: column; }
+    .filter-label { font-size: 14px; font-weight: 600; color: #2c3e50; margin-bottom: 8px; }
+    .filter-input, .filter-select { padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: border-color 0.3s ease; }
+    .filter-input:focus, .filter-select:focus { outline: none; border-color: #ff6b35; }
+    .filter-select { background: white; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e"); background-position: right 8px center; background-repeat: no-repeat; background-size: 16px; padding-right: 40px; }
+    .players-section { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden; }
+    .table-header { padding: 20px 25px; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; }
+    .table-title { font-size: 18px; font-weight: 600; color: #2c3e50; }
+    .table-actions { display: flex; gap: 10px; }
+    .search-box { position: relative; }
+    .search-input { padding: 8px 12px 8px 40px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; width: 250px; }
+    .search-input:focus { outline: none; border-color: #ff6b35; }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #666; width: 16px; height: 16px; }
+    .table-container { overflow-x: auto; }
+    .players-table { width: 100%; border-collapse: collapse; }
+    .players-table th { background: #f8f9fa; padding: 15px 20px; text-align: left; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e0e0e0; font-size: 14px; }
+    .players-table td { padding: 15px 20px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+    .players-table tr:hover { background: #f8f9fa; }
+    .player-info { display: flex; align-items: center; gap: 15px; }
+    .player-avatar { width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #ff6b35, #f7931e); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px; }
+    .player-details h4 { font-weight: 600; color: #2c3e50; margin-bottom: 2px; }
+    .player-details p { font-size: 12px; color: #666; }
+    .position-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
+    .position-forward { background: #d4edda; color: #155724; }
+    .position-midfielder { background: #cce5ff; color: #004085; }
+    .position-defender { background: #fff3cd; color: #856404; }
+    .position-goalkeeper { background: #f8d7da; color: #721c24; }
+    .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .status-active { background: #d4edda; color: #155724; }
+    .status-injured { background: #f8d7da; color: #721c24; }
+    .status-suspended { background: #fff3cd; color: #856404; }
+    .action-buttons { display: flex; gap: 8px; }
+    .action-btn { padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; }
+    .action-btn-edit { background: #e3f2fd; color: #1976d2; }
+    .action-btn-edit:hover { background: #bbdefb; }
+    .action-btn-delete { background: #ffebee; color: #d32f2f; }
+    .action-btn-delete:hover { background: #ffcdd2; }
+    .action-btn-view { background: #f3e5f5; color: #7b1fa2; }
+    .action-btn-view:hover { background: #e1bee7; }
+    .pagination { display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; border-top: 1px solid #e0e0e0; }
+    .pagination-info { font-size: 14px; color: #666; }
+    .pagination-controls { display: flex; gap: 10px; align-items: center; }
+    .page-btn { padding: 8px 12px; border: 2px solid #e0e0e0; background: white; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; font-size: 14px; }
+    .page-btn:hover { border-color: #ff6b35; color: #ff6b35; }
+    .page-btn.active { background: #ff6b35; border-color: #ff6b35; color: white; }
+    .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    @media (max-width: 768px) { .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; } .sidebar.open { transform: translateX(0); } .main-content { margin-left: 0; padding: 20px; } .filters-grid { grid-template-columns: 1fr; } .page-header { flex-direction: column; gap: 15px; align-items: flex-start; } .table-header { flex-direction: column; gap: 15px; align-items: flex-start; } .search-input { width: 100%; } }
+    
+</style>
+<div class="players-section">
+    <div class="table-header">
+        <h2 class="table-title">All Technical Team ({{technicals|length}})</h2>
+        <div class="table-actions">
+            {% if can_add %}
+            <button class="btn btn-primary" onclick="window.location.href='/portal/technicals/new'">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                </svg>
+                Add New Technical Team
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="players-table" id="playersTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for technical in technicals %}
+                    <tr onclick="view('{{ technical.name }}')" style="cursor: pointer;">
+                        <td>
+                            <div class="player-info">
+                                {% if technical.profile %}
+                                    <img src="{{ technical.profile }}" alt="{{ technical.full_name }}" class="player-avatar">
+                                {% else %}
+                                    <div class="player-avatar">{{ technical.full_name[:2].upper() }}</div>
+                                {% endif %}
+                                <div class="player-details">
+                                    <h4>{{ technical.full_name }}</h4>
+                                    <p>#{{ loop.index }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="position-badge position-{{ technical.role }}">{{ technical.role }}</span>
+                        </td>
+                        <td>{{ technical.phone_number or 'N/A' }}</td>
+                        <td>{{ technical.address or 'N/A' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        <div class="pagination-info">Showing 1-15 of 15 players</div>
+        <div class="pagination-controls">
+            <button class="page-btn" disabled>Previous</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn" disabled>Next</button>
+        </div>
+    </div>
+</div>
+<script>
+
+    function view(id) { 
+        window.location.href = `/portal/technicals/view?id=${id}`;
+    }
+    
+
+   
+</script>
+    
+{% endblock %}

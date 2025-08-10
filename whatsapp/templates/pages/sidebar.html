@@ -1,0 +1,147 @@
+<style>
+    .sidebar { width: 280px; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1); position: fixed; height: 100vh; overflow-y: auto; z-index: 1000; }
+    .sidebar-header { padding: 30px 25px 20px; border-bottom: 1px solid #e0e0e0; }
+    .logo { display: flex; align-items: center; margin-bottom: 20px; }
+    .logo-icon { width: 24px; height: 24px; background: linear-gradient(135deg, #ff6b35, #f7931e); border-radius: 50%; margin-right: 12px; position: relative; }
+    .logo-icon::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; background: white; border-radius: 50%; }
+    .logo-text { font-size: 20px; font-weight: 600; color: #2c3e50; }
+    .club-info { text-align: center; padding: 15px 0; }
+    .club-name { font-size: 18px; font-weight: 700; color: #2c3e50; margin-bottom: 5px; }
+    .club-league { font-size: 14px; color: #666; background: #f8f9fa; padding: 4px 12px; border-radius: 20px; display: inline-block; }
+    .nav-menu { padding: 20px 0; }
+    .nav-item { display: flex; align-items: center; padding: 15px 25px; color: #666; text-decoration: none; transition: all 0.3s ease; border-left: 3px solid transparent; }
+    .nav-item:hover { background: #f8f9fa; color: #2c3e50; border-left-color: #ff6b35; }
+    .nav-item.active { background: #fff5f2; color: #ff6b35; border-left-color: #ff6b35; font-weight: 600; }
+    .nav-icon { width: 20px; height: 20px; margin-right: 12px; opacity: 0.7; }
+    .nav-item.active .nav-icon { opacity: 1; }
+    
+    /* Hamburger Menu Styles */
+    .hamburger-menu { display: none; position: fixed; top: 20px; left: 20px; z-index: 1001; background: white; border: none; border-radius: 8px; padding: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); cursor: pointer; }
+    .hamburger-menu .bar { width: 25px; height: 3px; background: #2c3e50; margin: 5px 0; transition: 0.3s; border-radius: 2px; }
+    .hamburger-menu.active .bar:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+    .hamburger-menu.active .bar:nth-child(2) { opacity: 0; }
+    .hamburger-menu.active .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+    
+    @media (max-width: 768px) { 
+        .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; } 
+        .sidebar.open { transform: translateX(0); } 
+        .hamburger-menu { display: block; }
+        .main-content { margin-left: 0 !important; }
+    }
+</style>
+
+<!-- Hamburger Menu Button -->
+<button class="hamburger-menu" onclick="toggleSidebar()">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+</button>
+
+<div class="sidebar">
+    <div class="sidebar-header">
+        <div class="logo">
+            <div class="logo-icon"></div>
+            <div class="logo-text">KSDC</div>
+        </div>
+        <div class="club-info">
+            <div class="club-name">{{frappe.db.get_value("Club", {"owner":frappe.session.user}, "name")}}</div>
+        </div>
+    </div>
+    <nav class="nav-menu">
+        <a href="/portal/dashboard" class="nav-item {{'active' if active_page == 'dashboard' else ''}}">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+            </svg>
+            Dashboard
+        </a>
+        <a href="/portal/club" class="nav-item {{'active' if active_page == 'club' else ''}}">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+            </svg>
+            My Club
+        </a>
+        <a href="/portal/players" class="nav-item {{'active' if active_page == 'players' else ''}}">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+            </svg>
+            Players
+        </a>
+        <a href="#" class="nav-item">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Matches
+        </a>
+        <a href="#" class="nav-item">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+            </svg>
+            Statistics
+        </a>
+        <a href="#" class="nav-item">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"/>
+                <path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"/>
+            </svg>
+            Finance
+        </a>
+        <a href="#" class="nav-item">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/>
+            </svg>
+            Staff
+        </a>
+        <a href="#" class="nav-item">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+            </svg>
+            Settings
+        </a>
+    </nav>
+</div>
+
+<script>
+    // Toggle sidebar function - make it globally accessible
+    window.toggleSidebar = function() {
+        const sidebar = document.querySelector('.sidebar');
+        const hamburger = document.querySelector('.hamburger-menu');
+        
+        if (sidebar && hamburger) {
+            sidebar.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        }
+    };
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth <= 768) {
+            const sidebar = document.querySelector('.sidebar');
+            const hamburger = document.querySelector('.hamburger-menu');
+            const mainContent = document.querySelector('.main-content');
+            
+            if (sidebar && hamburger && mainContent) {
+                if (!sidebar.contains(e.target) && !hamburger.contains(e.target) && !mainContent.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                    hamburger.classList.remove('active');
+                }
+            }
+        }
+    });
+
+    // Close sidebar when clicking on a nav item on mobile
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    const sidebar = document.querySelector('.sidebar');
+                    const hamburger = document.querySelector('.hamburger-menu');
+                    
+                    if (sidebar && hamburger) {
+                        sidebar.classList.remove('open');
+                        hamburger.classList.remove('active');
+                    }
+                }
+            });
+        });
+    });
+</script>
