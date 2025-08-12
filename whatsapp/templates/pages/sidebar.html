@@ -1,147 +1,780 @@
+{% block style %}
 <style>
-    .sidebar { width: 280px; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1); position: fixed; height: 100vh; overflow-y: auto; z-index: 1000; }
-    .sidebar-header { padding: 30px 25px 20px; border-bottom: 1px solid #e0e0e0; }
-    .logo { display: flex; align-items: center; margin-bottom: 20px; }
-    .logo-icon { width: 24px; height: 24px; background: linear-gradient(135deg, #ff6b35, #f7931e); border-radius: 50%; margin-right: 12px; position: relative; }
-    .logo-icon::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; background: white; border-radius: 50%; }
-    .logo-text { font-size: 20px; font-weight: 600; color: #2c3e50; }
-    .club-info { text-align: center; padding: 15px 0; }
-    .club-name { font-size: 18px; font-weight: 700; color: #2c3e50; margin-bottom: 5px; }
-    .club-league { font-size: 14px; color: #666; background: #f8f9fa; padding: 4px 12px; border-radius: 20px; display: inline-block; }
-    .nav-menu { padding: 20px 0; }
-    .nav-item { display: flex; align-items: center; padding: 15px 25px; color: #666; text-decoration: none; transition: all 0.3s ease; border-left: 3px solid transparent; }
-    .nav-item:hover { background: #f8f9fa; color: #2c3e50; border-left-color: #ff6b35; }
-    .nav-item.active { background: #fff5f2; color: #ff6b35; border-left-color: #ff6b35; font-weight: 600; }
-    .nav-icon { width: 20px; height: 20px; margin-right: 12px; opacity: 0.7; }
-    .nav-item.active .nav-icon { opacity: 1; }
-    
-    /* Hamburger Menu Styles */
-    .hamburger-menu { display: none; position: fixed; top: 20px; left: 20px; z-index: 1001; background: white; border: none; border-radius: 8px; padding: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); cursor: pointer; }
-    .hamburger-menu .bar { width: 25px; height: 3px; background: #2c3e50; margin: 5px 0; transition: 0.3s; border-radius: 2px; }
-    .hamburger-menu.active .bar:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
-    .hamburger-menu.active .bar:nth-child(2) { opacity: 0; }
-    .hamburger-menu.active .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
-    
-    @media (max-width: 768px) { 
-        .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; } 
-        .sidebar.open { transform: translateX(0); } 
-        .hamburger-menu { display: block; }
-        .main-content { margin-left: 0 !important; }
+    :root {
+        --brand-green: #25D366;
+        --brand-green-600: #20C997;
+        --brand-green-700: #1EA085;
+        
+        /* Professional Dark Theme Colors */
+        --dark-bg: #1E293B;
+        --dark-bg-secondary: #334155;
+        --dark-bg-tertiary: #475569;
+        --text-white: #FFFFFF;
+        --text-gray: #CBD5E1;
+        --text-muted: #94A3B8;
+        
+        /* Typography */
+        --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        --font-size-sm: 0.875rem;
+        --font-size-base: 1rem;
+        --font-size-lg: 1.125rem;
+        --font-size-xl: 1.25rem;
+        
+        /* Spacing */
+        --spacing-1: 0.25rem;
+        --spacing-2: 0.5rem;
+        --spacing-3: 0.75rem;
+        --spacing-4: 1rem;
+        --spacing-5: 1.25rem;
+        --spacing-6: 1.5rem;
+        
+        /* Border Radius */
+        --radius-sm: 0.375rem;
+        --radius-md: 0.5rem;
+        --radius-lg: 0.75rem;
+    }
+
+    /* Sidebar container - Professional Dark Theme */
+    .jk-sidebar-books {
+        width: 260px;
+        height: 100vh;
+        background: var(--dark-bg);
+        color: var(--text-white);
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 1001;
+        display: flex;
+        flex-direction: column;
+        font-family: var(--font-family);
+        transition: all 0.2s ease;
+        border-right: 1px solid var(--dark-bg-secondary);
+    }
+
+    /* Sidebar Header */
+    .jk-sidebar-header {
+        padding: var(--spacing-3) var(--spacing-3);
+        border-bottom: 1px solid var(--dark-bg-secondary);
+        background: var(--dark-bg);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-2);
+        min-height: 48px;
+    }
+
+    .jk-sidebar-title {
+        font-size: var(--font-size-lg);
+        font-weight: 600;
+        color: var(--text-white);
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    .jk-sidebar-icon {
+        width: 24px;
+        height: 24px;
+        color: var(--text-white);
+        opacity: 0.9;
+    }
+
+    /* Phone Number Dropdown Styles */
+    .phone-dropdown {
+        position: relative;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .phone-dropdown-toggle {
+        background: transparent;
+        border: 1px solid var(--dark-bg-secondary);
+        border-radius: var(--radius-sm);
+        color: var(--text-white);
+        padding: 0.375rem 0.5rem;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.2s ease;
+        font-size: 0.75rem;
+        min-height: 32px;
+    }
+
+    .phone-dropdown-toggle:hover {
+        border-color: var(--brand-green);
+        background: var(--dark-bg-secondary);
+    }
+
+    .phone-dropdown-toggle:focus {
+        outline: none;
+        border-color: var(--brand-green);
+        box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.2);
+    }
+
+    .phone-dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--dark-bg);
+        border: 1px solid var(--dark-bg-secondary);
+        border-radius: var(--radius-sm);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        z-index: 1002;
+        max-height: 250px;
+        overflow-y: auto;
+        display: none;
+        margin-top: 0.25rem;
+    }
+
+    .phone-dropdown-menu.show {
+        display: block;
+    }
+
+    .phone-dropdown-item {
+        padding: 0.5rem 0.75rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        border-bottom: 1px solid var(--dark-bg-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        min-height: 32px;
+    }
+
+    .phone-dropdown-item:last-child {
+        border-bottom: none;
+    }
+
+    .phone-dropdown-item:hover {
+        background: var(--dark-bg-secondary);
+    }
+
+    .phone-dropdown-item.active {
+        background: var(--brand-green);
+        color: var(--text-white);
+    }
+
+    .phone-dropdown-item .phone-number {
+        font-weight: 500;
+        flex: 1;
+        font-size: 0.75rem;
+    }
+
+    .phone-dropdown-item .phone-label {
+        font-size: 0.625rem;
+        opacity: 0.8;
+    }
+
+    .phone-dropdown-item .phone-status {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--text-muted);
+        flex-shrink: 0;
+    }
+
+    .phone-dropdown-item .phone-status.status-open {
+        background: var(--brand-green);
+    }
+
+    .phone-dropdown-item .phone-status.status-connecting {
+        background: #FFA500;
+    }
+
+    .phone-dropdown-item .phone-status.status-close {
+        background: #DC3545;
+    }
+
+    .phone-dropdown-item .phone-status.status-unknown {
+        background: var(--text-muted);
+    }
+
+    .phone-dropdown-item.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: var(--dark-bg-tertiary);
+    }
+
+    .phone-dropdown-item.disabled:hover {
+        background: var(--dark-bg-tertiary);
+    }
+
+    .add-phone-btn {
+        background: var(--brand-green);
+        color: var(--text-white);
+        border: none;
+        border-radius: var(--radius-sm);
+        padding: 0.375rem 0.75rem;
+        cursor: pointer;
+        font-size: 0.625rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.25rem;
+        min-height: 28px;
+    }
+
+    .add-phone-btn:hover {
+        background: var(--brand-green-600);
+        transform: translateY(-1px);
+    }
+
+    .add-phone-btn i {
+        font-size: 0.75rem;
+    }
+
+    /* Navigation */
+    .jk-sidebar-nav {
+        flex: 1;
+        overflow-y: auto;
+        padding: var(--spacing-4) var(--spacing-3);
+    }
+
+    .jk-sidebar-nav::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .jk-sidebar-nav::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .jk-sidebar-nav::-webkit-scrollbar-thumb {
+        background: var(--dark-bg-tertiary);
+        border-radius: var(--radius-sm);
+    }
+
+    .jk-sidebar-nav::-webkit-scrollbar-thumb:hover {
+        background: var(--text-muted);
+    }
+
+    .jk-nav-section {
+        margin-bottom: var(--spacing-4);
+    }
+
+    .jk-nav-section:last-child {
+        margin-bottom: var(--spacing-2);
+    }
+
+    .jk-nav-item {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-3);
+        padding: var(--spacing-3) var(--spacing-4);
+        border-radius: var(--radius-md);
+        color: var(--text-white);
+        text-decoration: none;
+        transition: all 0.2s ease;
+        font-size: var(--font-size-sm);
+        font-weight: 500;
+        position: relative;
+        margin: var(--spacing-1) 0;
+        line-height: 1.4;
+        border: 1px solid transparent;
+        min-height: 40px;
+    }
+
+    .jk-nav-item:hover {
+        background: var(--dark-bg-secondary);
+        color: var(--text-white);
+        border-color: transparent;
+    }
+
+    .jk-nav-item.active {
+        background: var(--brand-green) !important;
+        color: var(--text-white) !important;
+        border-color: transparent !important;
+        box-shadow: 0 2px 4px rgba(37, 211, 102, 0.3) !important;
+        font-weight: 600 !important;
+    }
+
+    .jk-nav-item.active:hover {
+        background: var(--brand-green-600) !important;
+        box-shadow: 0 4px 8px rgba(37, 211, 102, 0.4) !important;
+    }
+
+    .jk-nav-item i {
+        font-size: var(--font-size-base);
+        width: 1.25rem;
+        text-align: center;
+        flex-shrink: 0;
+        opacity: 0.9;
+    }
+
+    .jk-nav-item .jk-nav-arrow {
+        margin-left: auto;
+        opacity: 0.7;
+        font-size: var(--font-size-sm);
+        transition: transform 0.2s ease;
+    }
+
+    /* Submenu Styles */
+    .jk-nav-item.has-submenu {
+        cursor: pointer;
+    }
+
+    .jk-nav-item.has-submenu .jk-nav-arrow {
+        transition: transform 0.2s ease;
+    }
+
+    .jk-nav-item.has-submenu.expanded .jk-nav-arrow {
+        transform: rotate(90deg);
+    }
+
+    .jk-submenu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        margin-left: var(--spacing-4);
+    }
+
+    .jk-submenu.expanded {
+        max-height: 400px;
+    }
+
+    .jk-submenu-item {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-3);
+        padding: var(--spacing-2) var(--spacing-4);
+        color: var(--text-gray);
+        text-decoration: none;
+        transition: all 0.2s ease;
+        font-size: var(--font-size-sm);
+        font-weight: 500;
+        border-radius: var(--radius-md);
+        margin: var(--spacing-1) 0;
+        line-height: 1.4;
+        border: 1px solid transparent;
+        position: relative;
+        min-height: 36px;
+    }
+
+    .jk-submenu-item:hover {
+        background: var(--dark-bg-secondary);
+        color: var(--text-white);
+        border-color: transparent;
+    }
+
+    .jk-submenu-item.active {
+        background: var(--brand-green) !important;
+        color: var(--text-white) !important;
+        border-color: transparent !important;
+        box-shadow: 0 2px 4px rgba(37, 211, 102, 0.3) !important;
+        font-weight: 600 !important;
+    }
+
+    .jk-submenu-item.active:hover {
+        background: var(--brand-green-600) !important;
+        box-shadow: 0 4px 8px rgba(37, 211, 102, 0.4) !important;
+    }
+
+    .jk-submenu-item i {
+        font-size: var(--font-size-sm);
+        width: 1.25rem;
+        text-align: center;
+        opacity: 0.8;
+        flex-shrink: 0;
+    }
+
+    /* Support Section */
+    .jk-nav-support {
+        margin-top: auto;
+        padding: var(--spacing-4);
+        border-top: 1px solid var(--dark-bg-secondary);
+        background: var(--dark-bg);
+    }
+
+    .jk-nav-support .jk-nav-item {
+        color: var(--text-muted);
+        border-color: transparent;
+    }
+
+    .jk-nav-support .jk-nav-item:hover {
+        color: var(--text-white);
+        background: var(--dark-bg-secondary);
+        border-color: transparent;
+    }
+
+    /* Mobile styles */
+    @media (max-width: 1024px) {
+        .jk-sidebar-books {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            width: 280px;
+        }
+
+        .jk-sidebar-books.show {
+            transform: translateX(0);
+        }
     }
 </style>
+{% endblock %}
 
-<!-- Hamburger Menu Button -->
-<button class="hamburger-menu" onclick="toggleSidebar()">
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-</button>
 
-<div class="sidebar">
-    <div class="sidebar-header">
-        <div class="logo">
-            <div class="logo-icon"></div>
-            <div class="logo-text">KSDC</div>
-        </div>
-        <div class="club-info">
-            <div class="club-name">{{frappe.db.get_value("Club", {"owner":frappe.session.user}, "name")}}</div>
+<!-- Inter font -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+{% set instances = frappe.get_all("WhatsApp Instance", {"owner": frappe.session.user}, ["name", "label", "phone_number", "status"]) %}
+<!-- Sidebar -->
+<aside class="jk-sidebar-books">
+    <div class="jk-sidebar-header">
+        <div class="phone-dropdown">
+            <button class="phone-dropdown-toggle" onclick="togglePhoneDropdown()">
+                <div>
+                    {% if instances and instances|length > 0 %}
+                        {% set url_instance = frappe.form_dict.get('instance') %}
+                        {% if url_instance %}
+                            {% set current_instance = none %}
+                            {% for instance in instances %}
+                                {% if instance.name == url_instance %}
+                                    {% set current_instance = instance %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if current_instance %}
+                                <div class="phone-number">{{ current_instance.phone_number }}</div>
+                                <div class="phone-label">{{ current_instance.label }}</div>
+                            {% else %}
+                                <div class="phone-number">{{ instances[0].phone_number }}</div>
+                                <div class="phone-label">{{ instances[0].label }}</div>
+                            {% endif %}
+                        {% else %}
+                            {% set instance = frappe.db.get_value("User", frappe.session.user, "instance") %}
+                            {% if instance %}
+                                <div class="phone-number">{{ frappe.db.get_value("WhatsApp Instance", instance, "phone_number") }}</div>
+                                <div class="phone-label">{{ frappe.db.get_value("WhatsApp Instance", instance, "label") }}</div>
+                            {% else %}
+                                <div class="phone-number">No Instance</div>
+                                <div class="phone-label">Add an instance first</div>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        <div class="phone-number">No Instances</div>
+                        <div class="phone-label">Add an instance first</div>
+                    {% endif %}
+                </div>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            
+            <div class="phone-dropdown-menu" id="phoneDropdown">
+                {% if instances and instances|length > 0 %}
+                    {% for instance in instances %}
+                        {% set url_instance = frappe.form_dict.get('instance') %}
+                        {% set is_active = (url_instance and instance.name == url_instance) or (not url_instance and loop.first) %}
+                        <div class="phone-dropdown-item {% if is_active %}active{% endif %}" data-phone="{{ instance.phone_number }}" data-label="{{ instance.label }}" data-instance="{{ instance.name }}">
+                            <div class="phone-status {% if instance.status == 'Open' %}status-open{% elif instance.status == 'Connecting' %}status-connecting{% elif instance.status == 'Close' %}status-close{% else %}status-unknown{% endif %}"></div>
+                            <div>
+                                <div class="phone-number">{{ instance.phone_number }}</div>
+                                <div class="phone-label">{{ instance.label }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="phone-dropdown-item disabled">
+                        <div class="phone-status status-unknown"></div>
+                        <div>
+                            <div class="phone-number">No instances found</div>
+                            <div class="phone-label">Create WhatsApp instances first</div>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <button class="add-phone-btn" onclick="addNewPhone()">
+                    <i class="fas fa-plus"></i>
+                    Add New Instance
+                </button>
+            </div>
         </div>
     </div>
-    <nav class="nav-menu">
-        <a href="/portal/dashboard" class="nav-item {{'active' if active_page == 'dashboard' else ''}}">
-            <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
-            </svg>
-            Dashboard
-        </a>
-        <a href="/portal/club" class="nav-item {{'active' if active_page == 'club' else ''}}">
-            <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-            </svg>
-            My Club
-        </a>
-        <a href="/portal/players" class="nav-item {{'active' if active_page == 'players' else ''}}">
-            <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
-            </svg>
-            Players
-        </a>
-        <a href="#" class="nav-item">
-            <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            Matches
-        </a>
-        <a href="#" class="nav-item">
-            <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-            </svg>
-            Statistics
-        </a>
-        <a href="#" class="nav-item">
-            <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"/>
-                <path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"/>
-            </svg>
-            Finance
-        </a>
-        <a href="#" class="nav-item">
-            <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/>
-            </svg>
-            Staff
-        </a>
-        <a href="#" class="nav-item">
-            <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
-            </svg>
-            Settings
-        </a>
+    
+    <nav class="jk-sidebar-nav">
+        <!-- Main Section -->
+        <div class="jk-nav-section">
+            <a href="/whatsapp" class="jk-nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+                <i class="fas fa-home"></i>
+                Dashboard
+            </a>
+        </div>
+
+        <!-- WhatsApp Section -->
+        <div class="jk-nav-section">
+            <a href="/whatsapp/messages" class="jk-nav-item {% if active_page == 'messages' %}active{% endif %}">
+                <i class="fas fa-message"></i>
+                Messages
+            </a>
+            <a href="/whatsapp/broadcast" class="jk-nav-item {% if active_page == 'broadcast' %}active{% endif %}">
+                <i class="fas fa-broadcast-tower"></i>
+                Broadcast
+            </a>
+            <a href="/whatsapp/contacts" class="jk-nav-item {% if active_page == 'contacts' %}active{% endif %}">
+                <i class="fas fa-address-book"></i>
+                Contacts
+            </a>
+            <a href="/whatsapp/contact-groups" class="jk-nav-item {% if active_page == 'contact-groups' %}active{% endif %}">
+                <i class="fas fa-users"></i>
+                Contact Groups
+            </a>
+        </div>
     </nav>
-</div>
+
+    <!-- Support Section -->
+    <div class="jk-nav-support">
+        <a href="/whatsapp/support" class="jk-nav-item {% if active_page == 'support' %}active{% endif %}">
+            <i class="fas fa-life-ring"></i>
+            Contact Support
+        </a>
+    </div>
+</aside>
 
 <script>
-    // Toggle sidebar function - make it globally accessible
-    window.toggleSidebar = function() {
-        const sidebar = document.querySelector('.sidebar');
-        const hamburger = document.querySelector('.hamburger-menu');
+document.addEventListener('DOMContentLoaded', function() {
+    const submenuTriggers = document.querySelectorAll('.jk-nav-item.has-submenu');
+    
+    // Toggle submenu function
+    function toggleSubmenu(e) {
+        e.preventDefault();
+        const submenu = e.currentTarget.nextElementSibling;
+        const isExpanded = e.currentTarget.classList.contains('expanded');
         
-        if (sidebar && hamburger) {
-            sidebar.classList.toggle('open');
-            hamburger.classList.toggle('active');
-        }
-    };
-
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener('click', function(e) {
-        if (window.innerWidth <= 768) {
-            const sidebar = document.querySelector('.sidebar');
-            const hamburger = document.querySelector('.hamburger-menu');
-            const mainContent = document.querySelector('.main-content');
-            
-            if (sidebar && hamburger && mainContent) {
-                if (!sidebar.contains(e.target) && !hamburger.contains(e.target) && !mainContent.contains(e.target)) {
-                    sidebar.classList.remove('open');
-                    hamburger.classList.remove('active');
-                }
+        // Close all other submenus
+        submenuTriggers.forEach(trigger => {
+            if (trigger !== e.currentTarget) {
+                trigger.classList.remove('expanded');
+                trigger.nextElementSibling.classList.remove('expanded');
             }
+        });
+        
+        // Toggle current submenu
+        e.currentTarget.classList.toggle('expanded');
+        submenu.classList.toggle('expanded');
+        
+        // If this submenu was closed and is now being opened, scroll it into view
+        if (!isExpanded) {
+            setTimeout(() => submenu.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+        }
+    }
+
+    // Add click events to submenu triggers
+    submenuTriggers.forEach(trigger => {
+        trigger.addEventListener('click', toggleSubmenu);
+    });
+
+    // Phone dropdown functionality
+    window.togglePhoneDropdown = function() {
+        console.log('Toggle dropdown clicked');
+        const dropdown = document.getElementById('phoneDropdown');
+        console.log('Dropdown element:', dropdown);
+        console.log('Current dropdown classes:', dropdown.className);
+        
+        dropdown.classList.toggle('show');
+        console.log('After toggle - dropdown classes:', dropdown.className);
+    }
+
+    // Handle phone number selection
+    function attachPhoneItemListeners() {
+        console.log('Attaching phone item listeners...');
+        
+        document.querySelectorAll('.phone-dropdown-item').forEach(item => {
+            console.log('Found phone dropdown item:', item.dataset.phone, item.dataset.label, item.dataset.instance);
+            
+            if (item.dataset.phone && !item.classList.contains('disabled')) { // Only for actual phone items, not disabled ones
+                console.log('Adding click listener to:', item.dataset.phone);
+                
+                // Remove existing listener to prevent duplicates
+                item.removeEventListener('click', handlePhoneItemClick);
+                
+                // Add new listener
+                item.addEventListener('click', handlePhoneItemClick);
+            } else {
+                console.log('Skipping item (disabled or no phone):', item.dataset.phone, item.classList.contains('disabled'));
+            }
+        });
+    }
+    
+    // Phone item click handler
+    function handlePhoneItemClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        console.log('Phone item clicked:', this.dataset.phone, this.dataset.label, this.dataset.instance);
+        
+        const phoneNumber = this.dataset.phone;
+        const phoneLabel = this.dataset.label;
+        const instanceName = this.dataset.instance; // Use the instance name from dataset
+        
+        console.log('Processing click - Phone:', phoneNumber, 'Label:', phoneLabel, 'Instance:', instanceName);
+        
+        if (!instanceName) {
+            console.error('No instance name found in dataset');
+            return;
+        }
+        
+        // Check if we're already on the correct instance
+        const currentUrl = new URL(window.location.href);
+        const currentInstance = currentUrl.searchParams.get('instance');
+        
+        console.log('Current instance from URL:', currentInstance, 'New instance:', instanceName);
+        
+        // Only reload if the instance is different
+        if (currentInstance !== instanceName) {
+            console.log('Instance different, will reload');
+            
+            // Update the toggle button
+            const toggle = document.querySelector('.phone-dropdown-toggle');
+            if (toggle) {
+                toggle.querySelector('.phone-number').textContent = phoneNumber;
+                toggle.querySelector('.phone-label').textContent = phoneLabel;
+            }
+            
+            // Update active state
+            document.querySelectorAll('.phone-dropdown-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Close dropdown
+            document.getElementById('phoneDropdown').classList.remove('show');
+            
+            // Store selected phone in localStorage
+            localStorage.setItem('selectedPhone', phoneNumber);
+            
+            // Reload to /whatsapp page with instance parameter
+            const currentPath = window.location.pathname;
+            if (currentPath.startsWith('/whatsapp')) {
+                // If already on a WhatsApp page, just update the URL and reload
+                const newUrl = `/whatsapp?instance=${instanceName}`;
+                console.log('Reloading to:', newUrl);
+                window.location.href = newUrl;
+            } else {
+                // If on a different page, navigate to WhatsApp with instance
+                const newUrl = `/whatsapp?instance=${instanceName}`;
+                console.log('Navigating to:', newUrl);
+                window.location.href = newUrl;
+            }
+            
+            console.log('Switching to new instance:', instanceName, 'from:', currentInstance);
+        } else {
+            console.log('Same instance, no reload needed');
+            
+            // Same instance, just update the UI without reloading
+            const toggle = document.querySelector('.phone-dropdown-toggle');
+            if (toggle) {
+                toggle.querySelector('.phone-number').textContent = phoneNumber;
+                toggle.querySelector('.phone-label').textContent = phoneLabel;
+            }
+            
+            // Update active state
+            document.querySelectorAll('.phone-dropdown-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Close dropdown
+            document.getElementById('phoneDropdown').classList.remove('show');
+            
+            // Store selected phone in localStorage
+            localStorage.setItem('selectedPhone', phoneNumber);
+            
+            console.log('Same instance selected:', instanceName, 'no reload needed');
+        }
+    }
+    
+    // Load previously selected phone and sync with URL
+    function syncInstanceWithURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlInstance = urlParams.get('instance');
+        
+        if (urlInstance) {
+            console.log('URL has instance parameter:', urlInstance);
+            
+            // Find the matching instance in the dropdown
+            const matchingItem = document.querySelector(`[data-instance="${urlInstance}"]`);
+            if (matchingItem) {
+                console.log('Found matching instance item:', matchingItem.dataset.label);
+                
+                // Update the toggle button to show the correct instance
+                const toggle = document.querySelector('.phone-dropdown-toggle');
+                if (toggle) {
+                    toggle.querySelector('.phone-number').textContent = matchingItem.dataset.phone;
+                    toggle.querySelector('.phone-label').textContent = matchingItem.dataset.label;
+                }
+                
+                // Update active state
+                document.querySelectorAll('.phone-dropdown-item').forEach(i => i.classList.remove('active'));
+                matchingItem.classList.add('active');
+                
+                // Store selected phone in localStorage
+                localStorage.setItem('selectedPhone', matchingItem.dataset.phone);
+                
+                console.log('Synced UI with URL instance:', urlInstance);
+            } else {
+                console.log('No matching instance found for URL parameter:', urlInstance);
+            }
+        } else {
+            console.log('No instance parameter in URL, using default');
+        }
+    }
+    
+    // Sync on page load
+    setTimeout(syncInstanceWithURL, 100);
+    
+    // Also sync when listeners are attached
+    function attachPhoneItemListeners() {
+        console.log('Attaching phone item listeners...');
+        
+        document.querySelectorAll('.phone-dropdown-item').forEach(item => {
+            console.log('Found phone dropdown item:', item.dataset.phone, item.dataset.label, item.dataset.instance);
+            
+            if (item.dataset.phone && !item.classList.contains('disabled')) { // Only for actual phone items, not disabled ones
+                console.log('Adding click listener to:', item.dataset.phone);
+                
+                // Remove existing listener to prevent duplicates
+                item.removeEventListener('click', handlePhoneItemClick);
+                
+                // Add new listener
+                item.addEventListener('click', handlePhoneItemClick);
+            } else {
+                console.log('Skipping item (disabled or no phone):', item.dataset.phone, item.classList.contains('disabled'));
+            }
+        });
+        
+        // Sync with URL after listeners are attached
+        syncInstanceWithURL();
+    }
+    
+    // Attach listeners after a short delay to ensure DOM is ready
+    setTimeout(attachPhoneItemListeners, 100);
+    
+    // Also attach listeners when dropdown is shown
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('phoneDropdown');
+        const toggle = document.querySelector('.phone-dropdown-toggle');
+        
+        if (!dropdown.contains(event.target) && !toggle.contains(event.target)) {
+            dropdown.classList.remove('show');
+        } else if (dropdown.classList.contains('show')) {
+            // Re-attach listeners when dropdown is shown
+            attachPhoneItemListeners();
         }
     });
 
-    // Close sidebar when clicking on a nav item on mobile
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                if (window.innerWidth <= 768) {
-                    const sidebar = document.querySelector('.sidebar');
-                    const hamburger = document.querySelector('.hamburger-menu');
-                    
-                    if (sidebar && hamburger) {
-                        sidebar.classList.remove('open');
-                        hamburger.classList.remove('active');
-                    }
-                }
-            });
-        });
-    });
+    // Load previously selected phone
+    const savedPhone = localStorage.getItem('selectedPhone');
+    if (savedPhone) {
+        const phoneItem = document.querySelector(`[data-phone="${savedPhone}"]`);
+        if (phoneItem && !phoneItem.classList.contains('disabled')) {
+            phoneItem.click(); // This will update the display
+        }
+    }
+});
+
+// Add new phone number function
+window.addNewPhone = function() {
+    console.log('Add new phone clicked, navigating to instance page');
+    // Navigate to the instance creation page
+    window.location.href = '/whatsapp/instance/new';
+}
 </script>

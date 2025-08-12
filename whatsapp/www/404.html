@@ -1,0 +1,416 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found - Jokoor Payroll</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/jokoor_payroll/images/favicon.png">
+    
+    <!-- Frappe Core CSS -->
+    <link type="text/css" rel="stylesheet" href="/assets/frappe/dist/css/desk.bundle.PF42IP66.css">
+    <link type="text/css" rel="stylesheet" href="/assets/frappe/dist/css/report.bundle.IQXDDEAG.css">
+    <link type="text/css" rel="stylesheet" href="/assets/erpnext/dist/css/erpnext.bundle.RXC5ZDCL.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hrms/dist/css/hrms.bundle.VF43JBCN.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- IBM Plex Sans font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
+    
+    <!-- jQuery (required by Frappe) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    
+
+    <style>
+        :root {
+            --brand-purple: #5534c9;
+            --brand-purple-50: #f6f4fe;
+            --brand-purple-100: #ede9fd;
+            --brand-purple-600: #5534c9;
+            --brand-purple-700: #4c2eb3;
+            --brand-purple-800: #42289c;
+            
+            --ibm-gray-10: #f4f4f4;
+            --ibm-gray-20: #e0e0e0;
+            --ibm-gray-30: #c6c6c6;
+            --ibm-gray-40: #a8a8a8;
+            --ibm-gray-50: #8d8d8d;
+            --ibm-gray-60: #6f6f6f;
+            --ibm-gray-70: #525252;
+            --ibm-gray-80: #393939;
+            --ibm-gray-90: #262626;
+            --ibm-gray-100: #161616;
+            
+            --ibm-font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --ibm-font-size-xs: 0.75rem;
+            --ibm-font-size-sm: 0.875rem;
+            --ibm-font-size-md: 1rem;
+            --ibm-font-size-lg: 1.125rem;
+            --ibm-font-size-xl: 1.25rem;
+            --ibm-font-size-2xl: 1.5rem;
+            --ibm-font-size-3xl: 1.875rem;
+            --ibm-font-size-4xl: 2.25rem;
+            --ibm-font-size-5xl: 3rem;
+            
+            --ibm-spacing-01: 0.125rem;
+            --ibm-spacing-02: 0.25rem;
+            --ibm-spacing-03: 0.5rem;
+            --ibm-spacing-04: 0.75rem;
+            --ibm-spacing-05: 1rem;
+            --ibm-spacing-06: 1.5rem;
+            --ibm-spacing-07: 2rem;
+            --ibm-spacing-08: 2.5rem;
+            --ibm-spacing-09: 3rem;
+            --ibm-spacing-10: 4rem;
+            
+            --ibm-border-radius-sm: 0.25rem;
+            --ibm-border-radius-md: 0.5rem;
+            --ibm-border-radius-lg: 0.75rem;
+            
+            --ibm-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+            --ibm-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --ibm-shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --ibm-shadow-xl: 0 8px 16px rgba(0, 0, 0, 0.1);
+            
+            --header-height: 60px;
+            --sidebar-width: 256px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--ibm-font-family);
+            background: var(--ibm-gray-10);
+            color: var(--ibm-gray-100);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .jk-main-wrapper {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            background: var(--ibm-gray-10);
+            transition: margin-left 0.3s cubic-bezier(0.2, 0, 0.38, 0.9);
+        }
+
+      
+
+        .jk-content {
+            padding: calc(var(--header-height) + var(--ibm-spacing-05)) var(--ibm-spacing-07) var(--ibm-spacing-07);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--ibm-spacing-03) var(--ibm-spacing-05);
+            border-radius: var(--ibm-border-radius-md);
+            font-size: var(--ibm-font-size-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.2, 0, 0.38, 0.9);
+            border: 1px solid transparent;
+            gap: var(--ibm-spacing-03);
+            text-decoration: none;
+            font-family: var(--ibm-font-family);
+        }
+
+        .btn-primary {
+            background: var(--brand-purple);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--brand-purple-700);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: var(--ibm-shadow-md);
+        }
+
+        .btn-outline {
+            border-color: var(--ibm-gray-30);
+            background: white;
+            color: var(--ibm-gray-70);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--ibm-gray-50);
+            color: var(--ibm-gray-100);
+            background: var(--ibm-gray-10);
+        }
+
+        .btn-lg {
+            padding: var(--ibm-spacing-04) var(--ibm-spacing-06);
+            font-size: var(--ibm-font-size-md);
+        }
+
+        .jk-404-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - var(--header-height) - var(--ibm-spacing-07) * 2);
+            text-align: center;
+            padding: var(--ibm-spacing-10) var(--ibm-spacing-07);
+        }
+
+        .jk-404-error-code {
+            font-size: var(--ibm-font-size-5xl);
+            font-weight: 700;
+            color: var(--brand-purple);
+            margin-bottom: var(--ibm-spacing-04);
+            font-family: var(--ibm-font-family);
+            line-height: 1;
+        }
+
+        .jk-404-title {
+            font-size: var(--ibm-font-size-3xl);
+            font-weight: 600;
+            color: var(--ibm-gray-100);
+            margin-bottom: var(--ibm-spacing-05);
+            font-family: var(--ibm-font-family);
+        }
+
+        .jk-404-description {
+            font-size: var(--ibm-font-size-lg);
+            color: var(--ibm-gray-60);
+            margin-bottom: var(--ibm-spacing-08);
+            max-width: 500px;
+            font-family: var(--ibm-font-family);
+            line-height: 1.6;
+        }
+
+        .jk-404-actions {
+            display: flex;
+            gap: var(--ibm-spacing-05);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .jk-404-illustration {
+            width: 300px;
+            height: 200px;
+            margin-bottom: var(--ibm-spacing-08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--ibm-gray-10);
+            border-radius: var(--ibm-border-radius-lg);
+            border: 2px dashed var(--ibm-gray-30);
+        }
+
+        .jk-404-illustration i {
+            font-size: 4rem;
+            color: var(--ibm-gray-40);
+        }
+
+        .jk-404-links {
+            display: flex;
+            flex-direction: column;
+            gap: var(--ibm-spacing-03);
+            margin-top: var(--ibm-spacing-06);
+        }
+
+        .jk-404-link {
+            color: var(--brand-purple);
+            text-decoration: none;
+            font-size: var(--ibm-font-size-sm);
+            font-family: var(--ibm-font-family);
+            transition: color 0.2s cubic-bezier(0.2, 0, 0.38, 0.9);
+        }
+
+        .jk-404-link:hover {
+            color: var(--brand-purple-700);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .jk-main-wrapper {
+                margin-left: 0;
+                padding-top: var(--header-height);
+            }
+
+            .jk-header {
+                left: 0;
+                padding-left: calc(36px + var(--ibm-spacing-05));
+            }
+
+            .jk-header-title {
+                font-size: var(--ibm-font-size-lg);
+            }
+
+            .jk-user-button span {
+                display: none;
+            }
+
+            .jk-user-dropdown {
+                position: fixed;
+                top: var(--header-height);
+                right: var(--ibm-spacing-05);
+                width: auto;
+                min-width: 200px;
+                max-width: calc(100vw - 2rem);
+            }
+
+            .jk-content {
+                padding: var(--ibm-spacing-05);
+            }
+
+            .jk-404-container {
+                padding: var(--ibm-spacing-07) var(--ibm-spacing-05);
+                min-height: calc(100vh - var(--header-height) - var(--ibm-spacing-05) * 2);
+            }
+
+            .jk-404-error-code {
+                font-size: var(--ibm-font-size-4xl);
+            }
+
+            .jk-404-title {
+                font-size: var(--ibm-font-size-2xl);
+            }
+
+            .jk-404-description {
+                font-size: var(--ibm-font-size-md);
+            }
+
+            .jk-404-illustration {
+                width: 250px;
+                height: 150px;
+            }
+
+            .jk-404-illustration i {
+                font-size: 3rem;
+            }
+
+            .jk-404-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .jk-404-actions .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .jk-header {
+                padding-left: calc(32px + var(--ibm-spacing-04));
+            }
+
+            .jk-404-error-code {
+                font-size: var(--ibm-font-size-3xl);
+            }
+
+            .jk-404-title {
+                font-size: var(--ibm-font-size-xl);
+            }
+
+            .jk-404-illustration {
+                width: 200px;
+                height: 120px;
+            }
+
+            .jk-404-illustration i {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="jk-main-wrapper">
+        
+
+        <main class="jk-content">
+            <div class="jk-404-container">
+                <!-- 404 Illustration -->
+                <div class="jk-404-illustration">
+                    <i class="fas fa-search"></i>
+                </div>
+
+                <!-- Error Code -->
+                <div class="jk-404-error-code">404</div>
+
+                <!-- Error Title -->
+                <h1 class="jk-404-title">Page Not Found</h1>
+
+                <!-- Error Description -->
+                <p class="jk-404-description">
+                    The page you're looking for doesn't exist or has been moved. 
+                    Please check the URL or use the navigation to find what you're looking for.
+                </p>
+
+               
+                <!-- Quick Links -->
+               
+            </div>
+        </main>
+    </div>
+
+    <!-- Frappe Core JS -->
+    <script type="text/javascript" src="/assets/frappe/dist/js/libs.bundle.LLRFRX7M.js"></script>
+    <script type="text/javascript" src="/assets/frappe/dist/js/desk.bundle.3STPEAC5.js"></script>
+    
+    <script>
+        // User dropdown toggle
+        
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            fetch('/api/method/logout', {
+                method: 'GET',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(() => {
+                window.location.href = '/login';
+            })
+            .catch(error => {
+                console.error('Logout error:', error);
+                window.location.href = '/login';
+            });
+        });
+
+        // Session keepalive
+        const KEEPALIVE_INTERVAL = 10 * 60 * 1000; // 10 minutes
+
+        function pingServer() {
+            fetch('/api/method/frappe.auth.ping', {
+                method: 'GET',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Frappe-CSRF-Token': frappe.csrf_token || ''
+                }
+            }).catch(console.error);
+        }
+
+        setInterval(pingServer, KEEPALIVE_INTERVAL);
+
+        let idleTimer;
+        function resetIdleTimer() {
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(pingServer, 2 * 60 * 1000);
+        }
+
+        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(
+            event => document.addEventListener(event, resetIdleTimer, true)
+        );
+
+        resetIdleTimer();
+    </script>
+</body>
+</html>
