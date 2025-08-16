@@ -9,7 +9,6 @@
       <p class="text-muted mb-0">Welcome to your WhatsApp Business overview</p>
     </div>
   </div>
-
   <!-- Key Metrics -->
   <div class="row mb-5">
     <div class="col-xl-3 col-md-6 mb-4">
@@ -23,8 +22,7 @@
             </div>
             <div class="flex-grow-1 ms-3">
               <h6 class="text-muted mb-1">Total Contacts</h6>
-              <h3 class="mb-1">1,247</h3>
-              <small class="text-success">+23 this week</small>
+              <h3 class="mb-1">{{ contact | int }}</h3>
             </div>
           </div>
         </div>
@@ -42,8 +40,7 @@
             </div>
             <div class="flex-grow-1 ms-3">
               <h6 class="text-muted mb-1">Messages Sent</h6>
-              <h3 class="mb-1">8,934</h3>
-              <small class="text-success">+156 today</small>
+              <h3 class="mb-1">{{ message | int }}</h3>
             </div>
           </div>
         </div>
@@ -61,8 +58,7 @@
             </div>
             <div class="flex-grow-1 ms-3">
               <h6 class="text-muted mb-1">Active Chats</h6>
-              <h3 class="mb-1">89</h3>
-              <small class="text-info">12 unread</small>
+              <h3 class="mb-1">{{ chat }}</h3>
             </div>
           </div>
         </div>

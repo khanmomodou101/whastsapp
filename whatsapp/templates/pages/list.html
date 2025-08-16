@@ -207,6 +207,13 @@
                                                     <span class="badge yellow">Pending</span>
                                                 {% elif 'Rejected' in row[column.key] %}
                                                     <span class="badge red">Rejected</span>
+                                                {% elif 'Open' in row[column.key] %}
+                                                    <span class="badge green">Open</span>
+                                                {% elif 'Closed' in row[column.key] %}
+                                                    <span class="badge red">Closed</span>
+                                                {% elif 'Connecting' in row[column.key] %}
+                                                    <span class="badge blue">Connecting</span>
+                                                    
                                                 {% else %}
                                                     {{ row[column.key] | safe }}
                                                 {% endif %}

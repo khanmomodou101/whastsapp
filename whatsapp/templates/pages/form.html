@@ -424,6 +424,15 @@
                             <span class="orange">{{ subtitle }}</span>
                             {% elif subtitle == 'Partly Paid' %}
                             <span class=" yellow">{{ subtitle }}</span>
+                            {% elif subtitle == 'Open' %}
+                            <span class="green">{{ subtitle }}</span>
+                            {% elif subtitle == 'Closed' %}
+                            <span class="red">{{ subtitle }}</span>
+                            {% elif subtitle == 'Connecting' %}
+                            <span class="blue">{{ subtitle }}</span>
+                            {% elif subtitle == 'Disconnected' %}
+                            <span class="red">{{ subtitle }}</span>
+                           
                             
                             
                             
@@ -534,12 +543,7 @@
                                             <i class="fas fa-eye me-2"></i>View Details
                                         </button></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><button class="dropdown-item" onclick="handleImport()">
-                                            <i class="fas fa-upload me-2"></i>Import
-                                        </button></li>
-                                        <li><button class="dropdown-item" onclick="handleExport()">
-                                            <i class="fas fa-download me-2"></i>Export
-                                        </button></li>
+                                        
                                         <li><hr class="dropdown-divider"></li>
                                         <li><button class="dropdown-item text-danger" onclick="handleDelete()">
                                             <i class="fas fa-trash me-2"></i>Delete
@@ -879,53 +883,26 @@
     // Refresh QR Code function
     function refreshQRCode() {
         const button = document.getElementById('refreshQRBtn');
-        const originalText = button ? button.innerHTML : '';
         const instanceId = '{{ id }}'; // Get instance ID from context
         
-        // Disable button and show loading state
+        console.log('Refreshing QR Code for instance:', instanceId);
+        console.log('Reloading page immediately...');
+        
+        // Disable button briefly to prevent multiple clicks
         if (button) {
             button.disabled = true;
-            button.innerHTML = '<div class="spinner-border spinner-border-sm me-2" role="status"></div>Refreshing...';
+            button.innerHTML = '<i class="fas fa-sync-alt fa-spin me-2"></i>Refreshing...';
         }
         
-        // Call the connect_instance function
-        frappe.call({
-            method: 'whatsapp.api.connect_instance',
-            args: {
-                instance: instanceId
-            },
-            callback: function(response) {
-                console.log('Response received:', response);
-                if (response.message === 'OK') {
-                    // Success - show success message briefly then reload
-                    if (button) {
-                        button.innerHTML = '<i class="fas fa-check me-2"></i>Success!';
-                        button.classList.remove('btn-outline-primary');
-                        button.classList.add('btn-success');
-                    }
-                    
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1500);
-                } else {
-                    // Error - show error message and re-enable button
-                    if (button) {
-                        button.innerHTML = originalText;
-                        button.disabled = false;
-                    }
-                    alert('Error refreshing QR Code: ' + (response.message || 'Unknown error'));
-                }
-            },
-            error: function(err) {
-                // Handle error
-                console.error('Frappe call error:', err);
-                if (button) {
-                    button.innerHTML = originalText;
-                    button.disabled = false;
-                }
-                alert('Error refreshing QR Code. Please try again.');
-            }
-        });
+        // Reload the page immediately without any API calls
+        try {
+            // Force reload the page
+            window.location.reload(true);
+        } catch (e) {
+            console.error('Reload failed, trying alternative method:', e);
+            // Fallback: navigate to same page
+            window.location.href = window.location.href;
+        }
     }
 </script>
 

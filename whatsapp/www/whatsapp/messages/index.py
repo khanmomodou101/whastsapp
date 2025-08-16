@@ -15,8 +15,7 @@ def get_context(context):
     context.columns = [
         {"key": "to", "label": "To"},
         {"key": "content_type", "label": "Type"},
-        {"key": "status", "label": "Status"},
-        {"key": "created_at", "label": "Created At"},
+        {"key": "creation", "label": "Created At"},
     ]
     
     # Get employee data

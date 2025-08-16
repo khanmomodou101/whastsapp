@@ -1,39 +1,21 @@
 import frappe
+from whatsapp.api import get_instance_status, connect_instance
+
+
 
 def get_context(context):
-
-    context.active_page = 'dashboard'
-    context.title = "Instance"
-    context.add_new_url = "/whatsapp/instance/new"
-
-    if frappe.request.args.get("per_page"):
-        per_page = int(frappe.request.args.get("per_page"))
+    # Get employee ID from URL
+    id = frappe.get_doc("WhatsApp Instance", {"owner": frappe.session.user}).name
+    status = get_instance_status(id)
+    if status.get("status") == "Open":
+        frappe.redirect("/whatsapp")
     else:
-        per_page = 20
-    
-    # Define table columns
-    context.columns = [
-        {"key": "label", "label": "Label"},
-        {"key": "phone_number", "label": "Phone Number"},
-        {"key": "created_at", "label": "Created At"},
-    ]
-    
-    # Get employee data
-    data = frappe.get_list(
-        "WhatsApp Instance", ["name","label","phone_number", 'creation'],
-        limit=per_page
-    )
-    
-    # Process employee data
-    for d in data:
+        connect_instance(id)
 
-        doc = frappe.get_doc("WhatsApp Instance", d.name)
-        creation = frappe.utils.format_date(doc.creation, "dd-MMM-yyyy")
-        d.creation = creation
-        d.name = doc.name
-        
-
-        d.url = f"/whatsapp/instance/view?id={doc.name}"
-        
-    context.per_page = per_page 
-    context.data = data
+    context.id = id
+    context.active_page = "dashboard"
+    context.title = frappe.db.get_value("WhatsApp Instance", id, "label")
+    context.url = f"instance/{id}"
+    context.subtitle = frappe.db.get_value("WhatsApp Instance", id, "status")
+    
+    return context
